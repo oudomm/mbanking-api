@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: mbanking-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: mbanking
+    ports:
+      - "5433:5432"
+    volumes:
+      - mbanking_data:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  mbanking_data:
