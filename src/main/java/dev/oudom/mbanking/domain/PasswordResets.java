@@ -11,21 +11,19 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "user_accounts")
-public class UserAccount {
+@Table(name = "password_resets")
+public class PasswordResets {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(nullable = false, length = 128)
+    private String email;
 
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    private Account account;
+    @Column(nullable = false)
+    private String token;
 
-    private Boolean isDeleted;
-    private LocalDateTime createdAt;
+    @Column(nullable = false)
+    private LocalDateTime expiredAt;
 }

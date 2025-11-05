@@ -1,6 +1,5 @@
 package dev.oudom.mbanking.domain;
 
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,18 +11,15 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "card_types")
-public class CardType {
+@Table(name = "authorities")
+public class Authority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @Column(unique = true, nullable = false, length = 100)
     private String name;
 
-    private Boolean isDeleted;
-
-    @OneToMany(mappedBy = "cardType")
-    private List<Card> cards;
+    @ManyToMany(mappedBy = "authorities")
+    private List<Role> roles;
 }
