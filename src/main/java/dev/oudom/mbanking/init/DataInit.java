@@ -1,6 +1,8 @@
 package dev.oudom.mbanking.init;
 
+import dev.oudom.mbanking.domain.AccountType;
 import dev.oudom.mbanking.domain.Role;
+import dev.oudom.mbanking.features.accountType.AccountTypeRepository;
 import dev.oudom.mbanking.features.user.RoleRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -13,9 +15,10 @@ import java.util.List;
 public class DataInit {
 
     private final RoleRepository roleRepository;
+    private final AccountTypeRepository accountTypeRepository;
 
     @PostConstruct
-    void init() {
+    void initRole() {
 
        if (roleRepository.count() < 1) {
            Role user = new Role();
@@ -35,5 +38,31 @@ public class DataInit {
            );
        }
 
+    }
+
+    @PostConstruct
+    void initAccountType() {
+        if (accountTypeRepository.count() < 1) {
+            AccountType savingActType = new AccountType();
+            savingActType.setName("Saving Account");
+            savingActType.setAlias("saving-account");
+            savingActType.setDescription("A basic deposit account designed for saving money with interest and easy access to funds. Ideal for long-term saving and general financial management.");
+            savingActType.setIsDeleted(false);
+            accountTypeRepository.save(savingActType);
+
+            AccountType payrollActType = new AccountType();
+            payrollActType.setName("Payroll Account");
+            payrollActType.setAlias("payroll-account");
+            payrollActType.setDescription("An account used for salary deposits and everyday financial transactions. Optimized for receiving payroll and managing monthly expenses.");
+            payrollActType.setIsDeleted(false);
+            accountTypeRepository.save(payrollActType);
+
+            AccountType cardActType = new AccountType();
+            cardActType.setName("Card Account");
+            cardActType.setAlias("card-account");
+            cardActType.setDescription("An account linked to debit or ATM cards, used for cash withdrawals, purchases, and daily transactions. Provides convenient access to funds.");
+            cardActType.setIsDeleted(false);
+            accountTypeRepository.save(cardActType);
+        }
     }
 }
