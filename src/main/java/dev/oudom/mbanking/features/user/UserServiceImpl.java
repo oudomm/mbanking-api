@@ -2,7 +2,9 @@ package dev.oudom.mbanking.features.user;
 
 import dev.oudom.mbanking.domain.Role;
 import dev.oudom.mbanking.domain.User;
+import dev.oudom.mbanking.features.user.dto.UserChangePasswordRequest;
 import dev.oudom.mbanking.features.user.dto.UserCreateRequest;
+import dev.oudom.mbanking.features.user.dto.UserUpdateProfileRequest;
 import dev.oudom.mbanking.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -67,6 +69,68 @@ public class UserServiceImpl implements UserService {
                                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Role USER has not been found!"));
         roles.add(userRole);
         user.setRoles(roles);
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public void changePassword(UserChangePasswordRequest userChangePasswordRequest) {
+
+        if (!userChangePasswordRequest.newPassword().equals(userChangePasswordRequest.confirmedPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New password and confirmed password do not match");
+        }
+
+        User user = userRepository.findByPhoneNumber(userChangePasswordRequest.phoneNumber())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist"));
+
+        if (!user.getPassword().equals(userChangePasswordRequest.oldPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Old password is incorrect");
+        }
+
+        user.setPassword(userChangePasswordRequest.newPassword());
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public void updateProfileByUuid(UserUpdateProfileRequest request, String uuid) {
+
+        User user = userRepository.findByUuid(uuid)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist"));
+
+        if (request.profileImage() != null) {
+            user.setProfileImage(request.profileImage());
+        }
+        if (request.cityOrProvince() != null) {
+            user.setCityOrProvince(request.cityOrProvince());
+        }
+        if (request.khanOrDistrict() != null) {
+            user.setKhanOrDistrict(request.khanOrDistrict());
+        }
+        if (request.sangkatOrCommune() != null) {
+            user.setSangkatOrCommune(request.sangkatOrCommune());
+        }
+        if (request.village() != null) {
+            user.setVillage(request.village());
+        }
+        if (request.street() != null) {
+            user.setStreet(request.street());
+        }
+        if (request.employeeType() != null) {
+            user.setEmployeeType(request.employeeType());
+        }
+        if (request.position() != null) {
+            user.setPosition(request.position());
+        }
+        if (request.companyName() != null) {
+            user.setCompanyName(request.companyName());
+        }
+        if (request.mainSourceOfIncome() != null) {
+            user.setMainSourceOfIncome(request.mainSourceOfIncome());
+        }
+        if (request.monthlyIncomeRange() != null) {
+            user.setMonthlyIncomeRange(request.monthlyIncomeRange());
+        }
 
         userRepository.save(user);
     }
