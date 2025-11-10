@@ -149,13 +149,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BasedMessage deleteByUuid(String uuid) {
+    public void deleteByUuid(String uuid) {
         User user = userRepository.findByUuid(uuid)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist"));
 
         userRepository.delete(user);
-
-        return new BasedMessage("User has been deleted successfully");
     }
 
     @Override

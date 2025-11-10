@@ -47,9 +47,10 @@ public class UserController {
         return userService.blockByUuid(uuid);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{uuid}")
-    BasedMessage deleteByUuid(@PathVariable String uuid) {
-        return userService.deleteByUuid(uuid);
+    void deleteByUuid(@PathVariable String uuid) {
+        userService.deleteByUuid(uuid);
     }
 
     @PutMapping("/{uuid}/disable")

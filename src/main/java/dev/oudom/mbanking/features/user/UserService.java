@@ -18,7 +18,7 @@ public interface UserService {
 
     BasedMessage blockByUuid(String uuid);
 
-    BasedMessage deleteByUuid(String uuid);
+    void deleteByUuid(String uuid);
 
     BasedMessage disableByUuid(String uuid);
 
