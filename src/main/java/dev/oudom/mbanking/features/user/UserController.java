@@ -1,5 +1,6 @@
 package dev.oudom.mbanking.features.user;
 
+import dev.oudom.mbanking.base.BasedMessage;
 import dev.oudom.mbanking.features.user.dto.UserChangePasswordRequest;
 import dev.oudom.mbanking.features.user.dto.UserCreateRequest;
 import dev.oudom.mbanking.features.user.dto.UserResponse;
@@ -28,12 +29,36 @@ public class UserController {
         userService.changePassword(request);
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PatchMapping("/update-profile/{uuid}")
+    @PatchMapping("/{uuid}")
     UserResponse updateByUuid(
             @PathVariable String uuid,
             @Valid @RequestBody UserUpdateRequest request
     ) {
         return userService.updateByUuid(uuid, request);
+    }
+
+    @GetMapping("/{uuid}")
+    UserResponse getByUuid(@PathVariable String uuid) {
+        return userService.findByUuid(uuid);
+    }
+
+    @PutMapping("/{uuid}/block")
+    BasedMessage blockByUuid(@PathVariable String uuid) {
+        return userService.blockByUuid(uuid);
+    }
+
+    @DeleteMapping("/{uuid}")
+    BasedMessage deleteByUuid(@PathVariable String uuid) {
+        return userService.deleteByUuid(uuid);
+    }
+
+    @PutMapping("/{uuid}/disable")
+    BasedMessage disableByUuid(@PathVariable String uuid) {
+        return userService.disableByUuid(uuid);
+    }
+
+    @PutMapping("/{uuid}/enable")
+    BasedMessage enableByUuid(@PathVariable String uuid) {
+        return userService.enableByUuid(uuid);
     }
 }

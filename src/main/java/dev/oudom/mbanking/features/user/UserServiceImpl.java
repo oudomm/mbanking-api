@@ -1,5 +1,6 @@
 package dev.oudom.mbanking.features.user;
 
+import dev.oudom.mbanking.base.BasedMessage;
 import dev.oudom.mbanking.domain.Role;
 import dev.oudom.mbanking.domain.User;
 import dev.oudom.mbanking.features.user.dto.UserChangePasswordRequest;
@@ -106,45 +107,78 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse updateByUuid(String uuid, UserUpdateRequest request) {
+    public UserResponse updateByUuid(String uuid, UserUpdateRequest userUpdateRequest) {
 
         User user = userRepository.findByUuid(uuid)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist"));
 
-        log.info("found user: {}", user);
+        log.info("before user: {}", user.getName());
+        log.info("before user: {}", user.getPosition());
+        log.info("before user: {}", user.getStudentIdCard());
 
-        if (request.cityOrProvince() != null) {
-            user.setCityOrProvince(request.cityOrProvince());
-        }
-        if (request.khanOrDistrict() != null) {
-            user.setKhanOrDistrict(request.khanOrDistrict());
-        }
-        if (request.sangkatOrCommune() != null) {
-            user.setSangkatOrCommune(request.sangkatOrCommune());
-        }
-        if (request.village() != null) {
-            user.setVillage(request.village());
-        }
-        if (request.street() != null) {
-            user.setStreet(request.street());
-        }
-        if (request.employeeType() != null) {
-            user.setEmployeeType(request.employeeType());
-        }
-        if (request.position() != null) {
-            user.setPosition(request.position());
-        }
-        if (request.companyName() != null) {
-            user.setCompanyName(request.companyName());
-        }
-        if (request.mainSourceOfIncome() != null) {
-            user.setMainSourceOfIncome(request.mainSourceOfIncome());
-        }
-        if (request.monthlyIncomeRange() != null) {
-            user.setMonthlyIncomeRange(request.monthlyIncomeRange());
+        userMapper.fromUserUpdateRequest(userUpdateRequest, user);
+
+        log.info("after user: {}", user.getName());
+        log.info("after user: {}", user.getPosition());
+        log.info("after user: {}", user.getStudentIdCard());
+
+        user = userRepository.save(user);
+
+        return userMapper.toUserResponse(user);
+
+    }
+
+    @Override
+    public UserResponse findByUuid(String uuid) {
+        User user = userRepository.findByUuid(uuid)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist"));
+
+        return userMapper.toUserResponse(user);
+    }
+
+    @Override
+    public BasedMessage blockByUuid(String uuid) {
+
+        if (!userRepository.existsByUuid(uuid)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist");
         }
 
-        return userRepository.save(user);
+        userRepository.blockByUuid(uuid);
 
+        return new BasedMessage("User has been blocked successfully");
+    }
+
+    @Override
+    public BasedMessage deleteByUuid(String uuid) {
+        User user = userRepository.findByUuid(uuid)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist"));
+
+        userRepository.delete(user);
+
+        return new BasedMessage("User has been deleted successfully");
+    }
+
+    @Override
+    public BasedMessage disableByUuid(String uuid) {
+
+        if (!userRepository.existsByUuid(uuid)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist");
+        }
+
+        userRepository.disableByUuid(uuid);
+
+        return new BasedMessage("User has been disabled successfully");
+    }
+
+    @Override
+    public BasedMessage enableByUuid(String uuid) {
+
+        if (!userRepository.existsByUuid(uuid)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist");
+        }
+
+        userRepository.enableByUuid(uuid);
+
+        return new BasedMessage("User has been enabled successfully");
     }
 }
