@@ -2,7 +2,8 @@ package dev.oudom.mbanking.features.user;
 
 import dev.oudom.mbanking.features.user.dto.UserChangePasswordRequest;
 import dev.oudom.mbanking.features.user.dto.UserCreateRequest;
-import dev.oudom.mbanking.features.user.dto.UserUpdateProfileRequest;
+import dev.oudom.mbanking.features.user.dto.UserResponse;
+import dev.oudom.mbanking.features.user.dto.UserUpdateRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,10 +30,10 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping("/update-profile/{uuid}")
-    void updateProfileByUuid(
-            @Valid @RequestBody UserUpdateProfileRequest request,
-            @PathVariable String uuid
+    UserResponse updateByUuid(
+            @PathVariable String uuid,
+            @Valid @RequestBody UserUpdateRequest request
     ) {
-        userService.updateProfileByUuid(request, uuid);
+        return userService.updateByUuid(uuid, request);
     }
 }

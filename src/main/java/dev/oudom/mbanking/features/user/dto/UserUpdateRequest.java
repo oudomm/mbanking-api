@@ -4,9 +4,7 @@ import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 
-public record UserUpdateProfileRequest(
-
-        String profileImage,
+public record UserUpdateRequest(
 
         @Size(max = 100)
         String cityOrProvince,
@@ -35,6 +33,8 @@ public record UserUpdateProfileRequest(
         @Size(max = 100)
         String mainSourceOfIncome,
 
-        BigDecimal monthlyIncomeRange
+        BigDecimal monthlyIncomeRange,
+
+        String studentIdCard
 ) {
 }

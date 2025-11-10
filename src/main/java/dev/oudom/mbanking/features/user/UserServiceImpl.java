@@ -4,9 +4,11 @@ import dev.oudom.mbanking.domain.Role;
 import dev.oudom.mbanking.domain.User;
 import dev.oudom.mbanking.features.user.dto.UserChangePasswordRequest;
 import dev.oudom.mbanking.features.user.dto.UserCreateRequest;
-import dev.oudom.mbanking.features.user.dto.UserUpdateProfileRequest;
+import dev.oudom.mbanking.features.user.dto.UserResponse;
+import dev.oudom.mbanking.features.user.dto.UserUpdateRequest;
 import dev.oudom.mbanking.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,6 +20,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -55,6 +58,7 @@ public class UserServiceImpl implements UserService {
             );
         }
 
+        // DTO pattern (mapstruct ft. lombok)
         User user = userMapper.fromUserCreateRequest(userCreateRequest);
         user.setUuid(UUID.randomUUID().toString());
         user.setProfileImage("avatar.png");
@@ -67,6 +71,15 @@ public class UserServiceImpl implements UserService {
         Role userRole = roleRepository.findByName("USER")
                         .orElseThrow(() ->
                                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Role USER has not been found!"));
+
+        // Create dynamic role from client
+        userCreateRequest.roles().forEach(r -> {
+            Role newRole = roleRepository.findByName(r.name())
+                    .orElseThrow(() ->
+                            new ResponseStatusException(HttpStatus.NOT_FOUND, "Role USER has not been found!"));
+            roles.add(newRole);
+        });
+
         roles.add(userRole);
         user.setRoles(roles);
 
@@ -93,14 +106,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateProfileByUuid(UserUpdateProfileRequest request, String uuid) {
+    public UserResponse updateByUuid(String uuid, UserUpdateRequest request) {
 
         User user = userRepository.findByUuid(uuid)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist"));
 
-        if (request.profileImage() != null) {
-            user.setProfileImage(request.profileImage());
-        }
+        log.info("found user: {}", user);
+
         if (request.cityOrProvince() != null) {
             user.setCityOrProvince(request.cityOrProvince());
         }
@@ -132,6 +144,7 @@ public class UserServiceImpl implements UserService {
             user.setMonthlyIncomeRange(request.monthlyIncomeRange());
         }
 
-        userRepository.save(user);
+        return userRepository.save(user);
+
     }
 }

@@ -3,6 +3,7 @@ package dev.oudom.mbanking.features.user.dto;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public record UserCreateRequest(
 
@@ -37,6 +38,9 @@ public record UserCreateRequest(
     LocalDate dob,
 
     @Size(max = 20)
-    String studentIdCard
+    String studentIdCard,
+
+    @NotEmpty
+    List<RoleRequest> roles
 ) {
 }

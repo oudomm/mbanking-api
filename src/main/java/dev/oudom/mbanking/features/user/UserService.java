@@ -2,7 +2,8 @@ package dev.oudom.mbanking.features.user;
 
 import dev.oudom.mbanking.features.user.dto.UserChangePasswordRequest;
 import dev.oudom.mbanking.features.user.dto.UserCreateRequest;
-import dev.oudom.mbanking.features.user.dto.UserUpdateProfileRequest;
+import dev.oudom.mbanking.features.user.dto.UserResponse;
+import dev.oudom.mbanking.features.user.dto.UserUpdateRequest;
 
 public interface UserService {
 
@@ -10,5 +11,5 @@ public interface UserService {
 
     void changePassword(UserChangePasswordRequest userChangePasswordRequest);
 
-    void updateProfileByUuid(UserUpdateProfileRequest userUpdateProfileRequest, String uuid);
+    UserResponse updateByUuid(String uuid, UserUpdateRequest userUpdateRequest);
 }
