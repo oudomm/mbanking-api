@@ -88,6 +88,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserResponse> findAllUsers() {
+        List<User> users = userRepository.findAllByIsDeletedFalseAndIsBlockedFalse();
+        return users.stream().map(user -> userMapper.toUserResponse(user)).toList();
+    }
+
+    @Override
     public void changePassword(UserChangePasswordRequest userChangePasswordRequest) {
 
         if (!userChangePasswordRequest.newPassword().equals(userChangePasswordRequest.confirmedPassword())) {

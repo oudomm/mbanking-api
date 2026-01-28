@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
@@ -21,6 +23,11 @@ public class UserController {
     @PostMapping
     void createNew(@Valid @RequestBody UserCreateRequest userCreateRequest) {
         userService.createNew(userCreateRequest);
+    }
+
+    @GetMapping
+    List<UserResponse> getAllUsers() {
+        return userService.findAllUsers();
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

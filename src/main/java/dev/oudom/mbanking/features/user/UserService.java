@@ -6,9 +6,13 @@ import dev.oudom.mbanking.features.user.dto.UserCreateRequest;
 import dev.oudom.mbanking.features.user.dto.UserResponse;
 import dev.oudom.mbanking.features.user.dto.UserUpdateRequest;
 
+import java.util.List;
+
 public interface UserService {
 
     void createNew(UserCreateRequest userCreateRequest);
+
+    List<UserResponse> findAllUsers();
 
     void changePassword(UserChangePasswordRequest userChangePasswordRequest);
 
