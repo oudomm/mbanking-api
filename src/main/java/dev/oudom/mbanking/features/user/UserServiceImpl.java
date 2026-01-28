@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
         userCreateRequest.roles().forEach(r -> {
             Role newRole = roleRepository.findByName(r.name())
                     .orElseThrow(() ->
-                            new ResponseStatusException(HttpStatus.NOT_FOUND, "Role USER has not been found!"));
+                            new ResponseStatusException(HttpStatus.NOT_FOUND, "Role " + r.name() + " does not exists!"));
             roles.add(newRole);
         });
 
