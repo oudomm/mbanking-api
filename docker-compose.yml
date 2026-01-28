@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:17
+    image: postgres:17.5-bullseye
     container_name: mbanking-postgres
     environment:
       POSTGRES_USER: postgres
